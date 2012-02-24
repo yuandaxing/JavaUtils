@@ -8,7 +8,10 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
+/*
+ * 这个缓存表的设计最重要的是利用了内部类可以访问外部类的成员，这样可以极大的简化了定时清理过期
+ * 数据的设计
+ */
 
 public class Cachetable<K,V> implements ICachetable<K,V>
 {
@@ -57,7 +60,7 @@ public class Cachetable<K,V> implements ICachetable<K,V>
         {  
             Map<K,V> expungedValues = new HashMap<K,V>();            
             synchronized(cache_)
-            {
+            { //iterator all the element
                 Enumeration<K> e = cache_.keys();
                 while( e.hasMoreElements() )
                 {        
@@ -99,6 +102,7 @@ public class Cachetable<K,V> implements ICachetable<K,V>
         }
     }   
 
+    //hashtable本来就是同步的
     private ICacheExpungeHook<K,V> globalHook_;
     private Hashtable<K, CacheableObject<V>> cache_;
     private Map<K, ICacheExpungeHook<K,V>> hooks_;
